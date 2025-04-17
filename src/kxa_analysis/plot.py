@@ -27,16 +27,26 @@ def plot_hist(df, column, title = None, xlabel = None, is_log = False):
     )
     fig.show()
 
-def generate_shades(base_rgb, num_shades):
-    # Generate lighter and darker shades based on the base color
-    r, g, b = [int(x) for x in base_rgb[4:-1].split(',')]
+def generate_shades(base_rgb, n):
+    """
+    Generate n progressively darker shades from the base_rgb color.
+    base_rgb should be in the form 'rgb(r, g, b)'
+    """
+    import re
+    import numpy as np
+
+    # Extract the RGB components
+    r, g, b = map(int, re.findall(r'\d+', base_rgb))
+
+    # Convert to numpy array for vector math
+    base_color = np.array([r, g, b])
+
+    # Slightly darken the color instead of lightening
     shades = []
-    for i in range(1, num_shades + 1):
-        # Lighten and darken based on i
-        factor = 0.1 * i
-        shades.append(f'rgb({max(0, min(255, r + int(factor * 255)))}, '
-                      f'{max(0, min(255, g + int(factor * 255)))}, '
-                      f'{max(0, min(255, b + int(factor * 255)))})')
+    for i in range(n):
+        factor = 1 - (i * 0.05)  # Each step darkens by 15%
+        new_color = np.clip(base_color * factor, 0, 255).astype(int)
+        shades.append(f"rgb({new_color[0]}, {new_color[1]}, {new_color[2]})")
     return shades
 
 
@@ -91,46 +101,98 @@ def plot_2d(df, feature, title = None, conditions = ['Model', 'Sex'],
     conditions_list = df[conditions].apply(lambda x: '-'.join(x), axis=1).tolist()
     # Add labels (same length as df)
     plot_frame["Label"] = conditions_list
+    if 'Layer' in conditions:
+        plot_frame['Layer'] = plot_frame['Label'].str.extract(r'^(L1|L2_3|L4|L5_6)')
+
+        layer_symbols = {
+            'L1': 'square',
+            'L2_3': 'circle',
+            'L4': 'diamond',
+            'L5_6': 'triangle-up'
+        }
+
+        plot_frame['Layer'] = plot_frame['Layer'].astype('category')
+
+
     # Plot using plotly.express
     # Adjust sizes: larger for 'interpolation'
-    plot_frame['size'] = plot_frame['Label'].apply(lambda x: 10 if x == 'interpolation' else 5)
+    plot_frame['size'] = plot_frame['Label'].apply(lambda x: 10 if x == 'interpolation' else 8)
+# Start figure
+    fig = go.Figure()
 
-    # Create the scatter plot
-    fig = px.scatter(
-        plot_frame, 
-        x=dim1, 
-        y=dim2, 
-        color='Label', 
-        size='size',        # Map the size column to marker sizes
-        size_max=10,        # Maximum marker size
+    # Plot each group manually to fully control legend and shape
+    for label in plot_frame['Label'].unique():
+        subset = plot_frame[plot_frame['Label'] == label]
+
+        # Skip empty subsets just in case
+        if subset.empty:
+            continue
+
+        if 'Layer' in conditions:
+            layer = subset['Layer'].iloc[0]
+            symbol = layer_symbols.get(layer, 'circle')
+        else:
+            symbol = 'circle'
+
+        color = colors.get(label, 'gray')
+
+        fig.add_trace(go.Scattergl(
+            x=subset[dim1],
+            y=subset[dim2],
+            mode='markers',
+            marker=dict(
+                size=subset['size'],
+                color=color,
+                symbol=symbol,
+                line=dict(width=0.5, color='black')
+            ),
+            name=label,
+            hoverinfo='text',
+            text=label
+        ))
+    # Final layout
+    fig.update_layout(
         title=title,
-        labels={'Label': 'Condition'},
-        color_discrete_map=colors
+        width=800,
+        height=800,
+        showlegend=True,
+        legend_title_text='Condition',
+        xaxis_title=dim1,
+        yaxis_title=dim2
     )
-
     # Calculate medians
     median_vectors = plot_frame.groupby('Label')[[dim1, dim2]].median().reset_index()
     median_vectors[dim1] = median_vectors[dim1].astype(float)
     median_vectors[dim2] = median_vectors[dim2].astype(float)
+    
+    if 'Layer' in conditions:
+        # Extract Layer from Label for shape mapping
+        median_vectors['Layer'] = median_vectors['Label'].str.extract(r'^(L1|L2_3|L4|L5_6)')
+        median_vectors['symbol'] = median_vectors['Layer'].map(layer_symbols)
 
     # Filter valid colors
     valid_colors = {key: colors[key] for key in colors if any(key == label for label in median_vectors['Label'].values)}
 
+
     # Add median markers
+    # Add median markers with hover labels
     fig.add_trace(
         go.Scattergl(
-            x=median_vectors[dim1], 
-            y=median_vectors[dim2], 
-            mode='markers', 
+            x=median_vectors[dim1],
+            y=median_vectors[dim2],
+            mode='markers',
             marker=dict(
-                size=12,  
-                color=median_vectors['Label'].map(valid_colors),  # Use filtered colors
+                size=14,
+                color=median_vectors['Label'].map(valid_colors),
+                symbol=median_vectors['symbol'],  # Apply the shape!
                 line=dict(width=2, color='black')
             ),
+            text=median_vectors['Label'],
+            hoverinfo='text',
             name='Median',
+            showlegend=True
         )
     )
-
     # Update layout
     fig.update_layout(
         showlegend=True,

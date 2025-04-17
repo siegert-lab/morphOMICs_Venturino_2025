@@ -22,12 +22,12 @@ output_base_path = f"results/dim_reduction/Morphomics.PID_{experiment}."
 
 # Run combination of pi or lm with umap or vae.
 output_filenames = {
-    # "pi_pca_vae": "pi_pca_vae_reduced_data.pkl",
+    "pi_pca_vae": "pi_pca_vae_reduced_data.pkl",
     "pi_umap": "pi_umap_reduced_data.pkl",
-    "pi_bt_umap": "pi_bt_umap_reduced_data.pkl",
+    # "pi_bt_umap": "pi_bt_umap_reduced_data.pkl",
     # "lm_pca_vae": "lm_pca_vae_reduced_data.pkl",
-    "lm_umap": "lm_umap_reduced_data.pkl",
-    "lm_bt_umap": "lm_bt_umap_reduced_data.pkl"
+    # "lm_umap": "lm_umap_reduced_data.pkl",
+    # "lm_bt_umap": "lm_bt_umap_reduced_data.pkl"
 }
 
 vae_par = {
