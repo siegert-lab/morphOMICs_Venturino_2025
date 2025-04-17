@@ -1,0 +1,34 @@
+Protocols = [
+        "Dim_reductions",
+    ]
+
+# Parameters_ID = "v1_l"
+
+[Dim_reductions]
+# "morphoframe_name" = "ipl_opl"
+
+"vectors_to_reduce" = 'pi'
+
+"filter_pixels" = true
+"pixel_std_cutoff" = 1e-5
+"normalize" = false
+"standardize" = true
+
+"save_data" = true
+"save_dimreducer" = true
+"save_folderpath" = "results/dim_reduction"
+"save_filename" = "pi_pca_vae"
+
+    [Dim_reductions.dimred_method_parameters]                 
+        [Dim_reductions.dimred_method_parameters.pca]
+        "n_components"= 64 
+        "svd_solver"= false 
+        "pca_version"= 'standard'
+
+        [Dim_reductions.dimred_method_parameters.vae]
+        "n_components" = 2
+        "nn_layers" = [32, 16, 8]
+        "batch_layer_norm" = false
+        "optimizer" = "cocob"
+        "scheduler" = false
+        "batch_size" = 8

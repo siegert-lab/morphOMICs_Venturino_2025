@@ -1,0 +1,21 @@
+Protocols = [
+        "Bootstrap",
+    ]
+
+[Bootstrap]
+# "morphoframe_filepath" = "results/vectorization/Morphomics.PID_v1_l.pi_100"
+
+# "morphoframe_name" = "v1_l"
+
+"bootstrap_conditions" = ['Layer', 'Model', 'Sex']
+
+"N_bags" = 100
+# 'n_samples' = 25
+# set the seed of the random number, for reproducibility 
+"rand_seed" = 34151
+
+# where the bootstrapped morphoframes will be stored
+# "bootstrapframe_name" = "v1_l_bt"
+# I would advise saving the data; value is either `true` or `false` (warning: take note that all the letters are in lower case)
+"save_data" = true
+"save_folderpath" = "results/bootstrap"

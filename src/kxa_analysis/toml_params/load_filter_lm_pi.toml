@@ -1,0 +1,73 @@
+Protocols = [
+        "Input",
+        "TMD",
+        "Filter_frame",
+        "Morphometrics",
+        "Vectorizations",
+    ]
+
+# Parameters_ID = "v1_l"
+
+[Input]
+# "data_location_filepath" = "../data_v1_layer"
+"extension" = "corrected.swc"
+"conditions" = [
+            "Layer",
+            "Model",
+            "Sex",
+            "Animal",
+        ]
+
+# "morphoframe_name" = "v1_l"
+
+
+[TMD]
+# "morphoframe_name" = "v1_l"
+
+"filtration_function" = "radial_distance"
+
+
+[Filter_frame]
+# "morphoframe_name" = "v1_l"
+"save_data" = true
+"save_folderpath" = "results/barcode"
+"save_filename" = "barcodes"
+[Filter_frame.features_to_filter]
+    [Filter_frame.features_to_filter.nb_trunks]
+        'min' = 0
+        'max' = 10
+        'type' = 'abs'
+    [Filter_frame.features_to_filter.max_length_bar]
+        'min' = 0
+        'max' = 110
+        'type' = 'abs'
+    [Filter_frame.features_to_filter.nb_bars]
+        'min' = 5
+        'max' = 250
+        'type' = 'abs'
+
+
+[Morphometrics]
+# "morphoframe_name" = "v1_l"
+"concatenate" = true
+
+
+[Vectorizations]
+# "morphoframe_name" = "v1_l"
+
+"save_data" = true
+"save_folderpath" = "results/vectorization"
+"save_filename" = "pi_lm"
+
+    [Vectorizations.vect_method_parameters]
+        [Vectorizations.vect_method_parameters.persistence_image]
+            # Compute de interval of the vectorization for each barcode
+            "rescale_lims" = false
+            # fix interval
+            "xlims" = [0,100]
+            "ylims" = [0,100]
+            "method" = 'kde'
+
+
+
+

@@ -1,0 +1,28 @@
+Protocols = [
+        "Dim_reductions",
+    ]
+
+# Parameters_ID = "v1_l"
+
+[Dim_reductions]
+# "morphoframe_filepath" = "results/vectorization/Morphomics.PID_v1_l.pi_100"
+# "morphoframe_name" = "v1_l"
+
+"filter_pixels" = false
+"normalize" = false
+"standardize" = true
+
+"save_data" = true
+"save_dimreducer" = true
+"save_folderpath" = "results/dim_reduction"
+
+    [Dim_reductions.dimred_method_parameters]                            
+        [Dim_reductions.dimred_method_parameters.umap]
+        # parameters for umap
+        "n_components" = 2
+        "n_neighbors" = 50 
+        "min_dist" = 0.05
+        "spread" = 3.0
+        "random_state" = 10
+        "metric" = "euclidean"
+        "densmap" = false

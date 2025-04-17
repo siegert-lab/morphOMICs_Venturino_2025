@@ -1,0 +1,22 @@
+# Ignore all folders containing 'data'
+**/*data*/**
+# Ignore all 'result' and 'results' folders, anywhere in the project
+**/result/
+**/results/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+env/
+.venv/
+*.env
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
