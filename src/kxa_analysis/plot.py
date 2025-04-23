@@ -65,11 +65,17 @@ base_colors = {
     'Control_4h-F': 'rgb(130, 130, 130)',
     '1xSaline_4h-M': 'rgb(20, 20, 20)',
     'Control_4h-M': 'rgb(20, 20, 20)',
-    '1xKXA+FKBP5KO_4h-F': 'rgb(255, 150, 150)',  # Add color for this case
-    '1xKXA+FKBP5KO_4h-M': 'rgb(150, 0, 0)',      # Add color for this case
-    '1xSaline+FKBP5KO_4h-F': 'rgb(180, 180, 255)',  # Add color for this case
-    '1xSaline+FKBP5KO_4h-M': 'rgb(80, 80, 150)',    # Add color for this case
 
+    '1xKXA+FKBP5KO_4h-F': 'rgb(255, 150, 150)',
+    '1xKXA+FKBP5KO_4h-M': 'rgb(150, 0, 0)',
+    '1xSaline+FKBP5KO_4h-F': 'rgb(180, 180, 255)',
+    '1xSaline+FKBP5KO_4h-M': 'rgb(80, 80, 150)',
+
+    # Distinct colors for each adrenalectomy group
+    '1xKXA+ADRENALECTOMY_4h-F': 'rgb(255, 160, 60)',     # warm orange
+    # '1xKXA+ADRENALECTOMY_4h-M': 'rgb(200, 100, 40)',     # burnt sienna
+    '1xSaline+ADRENALECTOMY_4h-F': 'rgb(255, 200, 100)', # goldenrod
+    # '1xSaline+ADRENALECTOMY_4h-M': 'rgb(180, 130, 90)'   # soft brown
 }
 
 # Prefixes for different shades
@@ -88,10 +94,16 @@ merged_dict = dict(base_colors, **extended_colors)
 
 def plot_2d(df, feature, title = None, conditions = ['Model', 'Sex'], 
             colors= merged_dict, name = None, extension = 'pdf', show = True,
-            ax_labels = ['dim_1', 'dim_2']):
+            ax_labels = ['dim_1', 'dim_2'],
+            xmin = None, xmax=  None, ymin = None, ymax=None):
 
+    if df.empty or df[feature].isnull().all():
+        print(f"Skipping plot — no data available for feature: {feature}")
+        return  # Or continue, depending on your context
     # Extract feature values (each row is already [x, y])
-    point_cloud = np.array(df[feature].tolist())[:,[0,1]]  # Convert list of lists to a NumPy array
+    point_cloud = np.vstack(df[feature].values)
+
+    # point_cloud = np.array(df[feature].tolist())[:,[0,1]]  # Convert list of lists to a NumPy array
     # Create DataFrame with dimensions and labels
     dim1 = ax_labels[0]
     dim2 = ax_labels[1]
@@ -184,7 +196,7 @@ def plot_2d(df, feature, title = None, conditions = ['Model', 'Sex'],
             marker=dict(
                 size=14,
                 color=median_vectors['Label'].map(valid_colors),
-                symbol=median_vectors['symbol'],  # Apply the shape!
+                # symbol=median_vectors['symbol'],  # Apply the shape!
                 line=dict(width=2, color='black')
             ),
             text=median_vectors['Label'],
@@ -197,10 +209,15 @@ def plot_2d(df, feature, title = None, conditions = ['Model', 'Sex'],
     fig.update_layout(
         showlegend=True,
         width=800,  
-        height=800  
+        height=800,
+
     )
+    if xmin is not None:
+        fig.update_layout(
+            xaxis=dict(range=[xmin, xmax]),
+            yaxis=dict(range=[ymin, ymax])
 
-
+        )
 
     if name is not None:
             save_filepath = name

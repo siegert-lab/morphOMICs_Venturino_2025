@@ -2,7 +2,7 @@ Protocols = [
         "Input",
         "TMD",
         "Filter_frame",
-        "Morphometrics",
+        # "Morphometrics",
         "Vectorizations",
     ]
 
@@ -47,9 +47,9 @@ Protocols = [
         'type' = 'abs'
 
 
-[Morphometrics]
-# "morphoframe_name" = "v1_l"
-"concatenate" = true
+# [Morphometrics]
+# # "morphoframe_name" = "v1_l"
+# "concatenate" = true
 
 
 [Vectorizations]

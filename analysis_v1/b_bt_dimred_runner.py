@@ -5,9 +5,9 @@ import numpy as np
 experiment = 'v1'
 
 # VAE parameters (KL factor)
-epochs = 1000
-x_values = np.linspace(2, 8, epochs)    
-kl_factor_list = list((1 - np.exp(-x_values))/2)
+epochs = 2000
+x_values = np.linspace(2, 7, epochs)    
+kl_factor_list = list(1 - np.exp(-x_values))
 vae_parameters = {}
 # Initialize the nested dictionaries
 vae_parameters["Dim_reductions"] = {}
@@ -24,23 +24,12 @@ output_base_path = f"results/dim_reduction/Morphomics.PID_{experiment}."
 output_filenames = {
     "pi_pca_vae": "pi_pca_vae_reduced_data.pkl",
     "pi_umap": "pi_umap_reduced_data.pkl",
-    # "pi_bt_umap": "pi_bt_umap_reduced_data.pkl",
+    "pi_bt_umap": "pi_bt_umap_reduced_data.pkl",
     # "lm_pca_vae": "lm_pca_vae_reduced_data.pkl",
     # "lm_umap": "lm_umap_reduced_data.pkl",
     # "lm_bt_umap": "lm_bt_umap_reduced_data.pkl"
 }
 
-vae_par = {
-    'pi_pca_vae' : {
-        "nb_epochs": 100,
-        "kl_factor_function": list((1 - np.exp(-x_values))/100)
-    },
-
-    'lm_pca_vae' :  {
-        "nb_epochs": 100,
-        "kl_factor_function": list((1 - np.exp(-x_values))/200)
-    },
-}
 
 
 pi_lm_filepath = f"results/vectorization/Morphomics.PID_{experiment}.pi_lm.pkl"
@@ -62,16 +51,13 @@ for key, filename in output_filenames.items():
             _ = bootstrap_runner(parameters_id=experiment, 
                     vectors_filepath = pi_lm_filepath,
                      vectorization_name = vect_name,
-                        bt_ratio=0.3,
+                     bt_ratio=0.15
                     )
             input_filepath = f"results/bootstrap/Morphomics.PID_{experiment}.{vect_name}_bt.pkl"
             dimred_name = dimred_name[3:]
         else:
             input_filepath = pi_lm_filepath
             
-        if "pca_vae" in key:
-            vae_parameters["Dim_reductions"]["dimred_method_parameters"]["vae"] = vae_par[key]
-
         _ = dimreduction_runner(
             parameters_id=experiment, 
             vectors_filepath=input_filepath, 

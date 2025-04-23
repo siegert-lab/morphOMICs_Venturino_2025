@@ -16,7 +16,7 @@ mf_name = dataset
 parameters["Input"]["morphoframe_name"] = mf_name
 parameters["TMD"]["morphoframe_name"] = mf_name
 parameters["Filter_frame"]["morphoframe_name"] = mf_name
-parameters["Morphometrics"]["morphoframe_name"] = mf_name
+# parameters["Morphometrics"]["morphoframe_name"] = mf_name
 parameters["Vectorizations"]["morphoframe_name"] = mf_name
 
 my_pipeline = run_toml(parameters, morphoframe = {})

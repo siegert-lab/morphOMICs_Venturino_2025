@@ -32,23 +32,40 @@ def multi_plots_2d(df_path,
     name_kxa_fkbp5ko_f = base_save_folder_path + base_save_filename + '_kxa-fkbp5ko_F_'
     name_kxa_fkbp5ko_m = base_save_folder_path + base_save_filename + '_kxa-fkbp5ko_M_'
 
+    name_kxa_adrenalectomy_f = base_save_folder_path + base_save_filename + '_kxa-adrenalectomy_F_'
+    name_kxa_adrenalectomy_m = base_save_folder_path + base_save_filename + '_kxa-adrenalectomy_M_'
+
+    name_fkbp5ko_adrenalectomy_f = base_save_folder_path + base_save_filename + '_fkbp5ko-adrenalectomy_F_'
+    name_fkbp5ko_adrenalectomy_m = base_save_folder_path + base_save_filename + '_fkbp5ko-adrenalectomy_M_'
+
     name_safit = base_save_folder_path + base_save_filename + '_safit_'
 
     name_fkbp5ko = base_save_folder_path + base_save_filename + '_fkbp5ko_'
+
+    name_adrenalectomy = base_save_folder_path + base_save_filename + '_adrenalectomy_'
 
     name_list = [name_kxa,
                 name_kxa_safit_f,
                 name_kxa_safit_m,
                 name_kxa_fkbp5ko_f,
                 name_kxa_fkbp5ko_m,
+                name_kxa_adrenalectomy_f,
+                name_kxa_adrenalectomy_m,
                 name_safit,
-                name_fkbp5ko]
+                name_fkbp5ko,
+                name_adrenalectomy,
+                name_fkbp5ko_adrenalectomy_f,
+                name_fkbp5ko_adrenalectomy_m,
+                ]
 
     # define sub morphoframes
     mf_kxa = mf_[mf_['Model'].isin(['1xSaline_4h', '1xKXA_4h'])]
 
     models_safit = ['1xSaline_4h', '1xKXA_4h', '1xKXA+SAFIT2_4h', '1xSaline+SAFIT2_4h']
     models_fkbp5ko = ['1xSaline_4h', '1xKXA_4h', '1xKXA+FKBP5KO_4h', '1xSaline+FKBP5KO_4h']
+    models_adrenalectomy = ['1xSaline_4h', '1xKXA_4h', '1xKXA+ADRENALECTOMY_4h', '1xSaline+ADRENALECTOMY_4h']
+    mf_fkbp5ko_adrenalectomy = ['1xKXA+FKBP5KO_4h', '1xSaline+FKBP5KO_4h', '1xKXA+ADRENALECTOMY_4h', '1xSaline+ADRENALECTOMY_4h']
+
 
     mf_kxa_safit_f = mf_[(mf_['Sex'] == 'F') & (mf_['Model'].isin(models_safit))]
     mf_kxa_safit_m = mf_[(mf_['Sex'] == 'M') & (mf_['Model'].isin(models_safit))]
@@ -56,8 +73,16 @@ def multi_plots_2d(df_path,
     mf_kxa_fkbp5ko_f = mf_[(mf_['Sex'] == 'F') & (mf_['Model'].isin(models_fkbp5ko))]
     mf_kxa_fkbp5ko_m = mf_[(mf_['Sex'] == 'M') & (mf_['Model'].isin(models_fkbp5ko))]
 
+    mf_kxa_adrenalectomy_f = mf_[(mf_['Sex'] == 'F') & (mf_['Model'].isin(models_adrenalectomy))]
+    mf_kxa_adrenalectomy_m = mf_[(mf_['Sex'] == 'M') & (mf_['Model'].isin(models_adrenalectomy))]
+
+    mf_fkbp5ko_adrenalectomy_f = mf_[(mf_['Sex'] == 'F') & (mf_['Model'].isin(mf_fkbp5ko_adrenalectomy))]
+    mf_fkbp5ko_adrenalectomy_m = mf_[(mf_['Sex'] == 'M') & (mf_['Model'].isin(mf_fkbp5ko_adrenalectomy))]
+
     mf_safit = mf_[mf_['Model'].isin(['1xSaline_4h', '1xSaline+SAFIT2_4h'])]
     mf_fkbp5ko = mf_[mf_['Model'].isin(['1xSaline_4h', '1xSaline+FKBP5KO_4h'])]
+    mf_adrenalectomy = mf_[mf_['Model'].isin(['1xSaline_4h', '1xSaline+ADRENALECTOMY_4h'])]
+
 
     mf_list = [
         mf_kxa,
@@ -65,11 +90,17 @@ def multi_plots_2d(df_path,
         mf_kxa_safit_m,
         mf_kxa_fkbp5ko_f,
         mf_kxa_fkbp5ko_m,
+        mf_kxa_adrenalectomy_f,
+        mf_kxa_adrenalectomy_m,
         mf_safit,
-        mf_fkbp5ko
+        mf_fkbp5ko,
+        mf_adrenalectomy,
+        mf_fkbp5ko_adrenalectomy_f,
+        mf_fkbp5ko_adrenalectomy_m,
     ]
 
     for sub_mf, name in zip(mf_list, name_list):
+        print(sub_mf['Model'].unique())
         plot_2d(df = sub_mf, 
                 title = title,
                 feature = feature, 
