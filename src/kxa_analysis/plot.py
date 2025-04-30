@@ -231,7 +231,13 @@ def plot_2d(df, feature, title = None, conditions = ['Model', 'Sex'],
         fig.show()
     del fig  # Delete the figure
 
-def plot_pi(pi, title = None, name = None, is_log=False, cmap=None, show=True, norm = None, scale = 'Loading Scale'):
+def plot_pi(pi, title = None, 
+            name = None, 
+            is_log=False, 
+            cmap=None, 
+            show=True, 
+            norm = None, 
+            scale = 'Loading Scale'):
     if len(pi.shape) == 1:  
         pi_2d = get_2d(pi)
     else:
